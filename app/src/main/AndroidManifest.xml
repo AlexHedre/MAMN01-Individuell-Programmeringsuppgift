@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IndividuellProgrammeringsuppgift">
         <activity
+            android:name=".Accelerometer"
+            android:exported="false" />
+        <activity
+            android:name=".Compass"
+            android:exported="false" />
+        <activity
             android:name=".DisplayMessageActivity"
             android:exported="false" />
         <activity
