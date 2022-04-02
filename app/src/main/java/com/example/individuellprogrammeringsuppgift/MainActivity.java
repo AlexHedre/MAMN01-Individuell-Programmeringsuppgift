@@ -18,17 +18,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Called when the user taps the Send button
-     */
-    public void sendMessage(View view) {
-        Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText) findViewById(R.id.textInputEditText);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);
-    }
-
-    /**
      * Called when the user taps the Compass button
      */
     public void goToCompass(View view) {

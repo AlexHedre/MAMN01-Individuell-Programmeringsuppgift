@@ -5,8 +5,9 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.util.Log;
+import android.os.Vibrator;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -14,47 +15,37 @@ import android.widget.TextView;
 
 
 public class Compass extends Activity implements SensorEventListener {
-
-    // define the display assembly compass picture
     private ImageView image;
-
-    // record the compass picture angle turned
     private float currentDegree = 0f;
-
-    // device sensor manager
-    private SensorManager mSensorManager;
-
     TextView tvHeading;
+
+    private SensorManager mSensorManager;
+    private Vibrator vibrator;
+    private MediaPlayer mediaPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_compass);
 
-        // our compass image
         image = (ImageView) findViewById(R.id.imageViewCompass);
-
-        // TextView that will tell the user what degree is he heading
         tvHeading = (TextView) findViewById(R.id.tvHeading);
 
-        // initialize your android device sensor capabilities
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.sound_file);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        // for the system's orientation sensor registered listeners
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-                SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
-        // to stop the listener and save battery
         mSensorManager.unregisterListener(this);
     }
 
@@ -62,15 +53,24 @@ public class Compass extends Activity implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         // get the angle around the z-axis rotated
         float degree = Math.round(event.values[0]);
-        tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
+        tvHeading.setText("Heading: " + (int) degree + " degrees");
+
+        if (degree > 330 || degree < 30) {
+            mediaPlayer.start();
+        }
+
+        if (degree > 345 || degree < 15) {
+            vibrator.vibrate(10);
+        }
 
         // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(
-                currentDegree,
-                -degree,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF,
-                0.5f);
+            currentDegree,
+            -degree,
+            Animation.RELATIVE_TO_SELF, 0.5f,
+            Animation.RELATIVE_TO_SELF,
+            0.5f
+        );
 
         // how long the animation will take place
         ra.setDuration(210);
@@ -81,7 +81,6 @@ public class Compass extends Activity implements SensorEventListener {
         // Start the animation
         image.startAnimation(ra);
         currentDegree = -degree;
-
     }
 
     @Override
