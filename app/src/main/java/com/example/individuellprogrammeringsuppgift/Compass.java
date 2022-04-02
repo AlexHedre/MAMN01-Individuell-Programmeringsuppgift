@@ -6,10 +6,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 
 public class Compass extends Activity implements SensorEventListener {
 
@@ -27,7 +29,7 @@ public class Compass extends Activity implements SensorEventListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_compass);
 
         // our compass image
         image = (ImageView) findViewById(R.id.imageViewCompass);
@@ -58,10 +60,8 @@ public class Compass extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-
-        // get the angle around the z-axis rotated, rounded to 1 decimal
-        float degree = Math.round(event.values[0] * 10) / 10;
-
+        // get the angle around the z-axis rotated
+        float degree = Math.round(event.values[0]);
         tvHeading.setText("Heading: " + Float.toString(degree) + " degrees");
 
         // create a rotation animation (reverse turn degree degrees)
