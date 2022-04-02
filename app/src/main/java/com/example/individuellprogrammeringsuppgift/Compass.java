@@ -51,18 +51,17 @@ public class Compass extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        // get the angle around the z-axis rotated
         float degree = Math.round(event.values[0]);
+
+        if (degree > 330 || degree < 30) mediaPlayer.start();
+        if (degree > 345 || degree < 15) vibrator.vibrate(10);
+
+        rotateImage(degree);
+
         tvHeading.setText("Heading: " + (int) degree + " degrees");
+    }
 
-        if (degree > 330 || degree < 30) {
-            mediaPlayer.start();
-        }
-
-        if (degree > 345 || degree < 15) {
-            vibrator.vibrate(10);
-        }
-
+    public void rotateImage(float degree) {
         // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(
             currentDegree,
