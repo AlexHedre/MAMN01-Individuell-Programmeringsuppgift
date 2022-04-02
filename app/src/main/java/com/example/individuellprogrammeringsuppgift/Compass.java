@@ -19,7 +19,7 @@ public class Compass extends Activity implements SensorEventListener {
     private float currentDegree = 0f;
     TextView tvHeading;
 
-    private SensorManager mSensorManager;
+    private SensorManager sensorManager;
     private Vibrator vibrator;
     private MediaPlayer mediaPlayer;
 
@@ -32,7 +32,7 @@ public class Compass extends Activity implements SensorEventListener {
         tvHeading = (TextView) findViewById(R.id.tvHeading);
 
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         mediaPlayer = MediaPlayer.create(this, R.raw.sound_file);
     }
@@ -40,13 +40,13 @@ public class Compass extends Activity implements SensorEventListener {
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_GAME);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        sensorManager.unregisterListener(this);
     }
 
     @Override
