@@ -50,7 +50,7 @@ public class Accelerometer extends Activity implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        acceleration.setText("Accelerometer values:" +
+        acceleration.setText("Accelerometer värden:" +
             "\nX: " + Math.round(event.values[0]*10)/10.0 +
             "\nY: " + Math.round(event.values[1]*10)/10.0 +
             "\nZ: " + Math.round(event.values[2]*10)/10.0
@@ -65,6 +65,9 @@ public class Accelerometer extends Activity implements SensorEventListener {
         shakeCheck(event);
     }
 
+    /**
+     * Displays the inclination of the phone and changes the color of the screen to cyan if it isn't leveled
+     */
     public void displayInclination() {
         String direction = "Jämn";
         if (Math.abs(gravity[0]) > Math.abs(gravity[1])) {
@@ -80,7 +83,7 @@ public class Accelerometer extends Activity implements SensorEventListener {
                 direction = "Framåt";
             }
         }
-        if (direction == "Jämn") {
+        if (direction.equals("Jämn")) {
             background.setBackgroundColor(Color.WHITE);
         } else {
             background.setBackgroundColor(Color.CYAN);
@@ -88,8 +91,16 @@ public class Accelerometer extends Activity implements SensorEventListener {
         inclination.setText(direction);
     }
 
+    /**
+     * If the total acceleration on the phone minus gravity is higher than a threshold the phone will vibrate
+     */
     public void shakeCheck(SensorEvent event) {
-        if (8 < (event.values[0] + event.values[1] + event.values[2]) - (gravity[0] + gravity[1] + gravity[2])) {
+        final float vibration_threshold = 10.0f;
+        float totalAcceleration = Math.abs(event.values[0]) + Math.abs(event.values[1]) + Math.abs(event.values[2]);
+        float gravityAcceleration = Math.abs(gravity[0]) + Math.abs(gravity[1]) + Math.abs(gravity[2]);
+        float acceleration = totalAcceleration - gravityAcceleration;
+
+        if (acceleration > vibration_threshold) {
             vibrator.vibrate(100);
         }
     }

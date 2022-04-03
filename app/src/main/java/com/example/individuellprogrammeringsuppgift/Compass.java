@@ -30,11 +30,10 @@ public class Compass extends Activity implements SensorEventListener {
 
         image = (ImageView) findViewById(R.id.imageViewCompass);
         tvHeading = (TextView) findViewById(R.id.tvHeading);
+        mediaPlayer = MediaPlayer.create(this, R.raw.sound_file);
 
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-        mediaPlayer = MediaPlayer.create(this, R.raw.sound_file);
     }
 
     @Override
@@ -58,9 +57,12 @@ public class Compass extends Activity implements SensorEventListener {
 
         rotateImage(degree);
 
-        tvHeading.setText("Heading: " + (int) degree + " degrees");
+        tvHeading.setText("Riktning: " + (int) degree + " grader");
     }
 
+    /**
+     * Rotates the image with a RotateAnimation to the specified degree
+     */
     public void rotateImage(float degree) {
         // create a rotation animation (reverse turn degree degrees)
         RotateAnimation ra = new RotateAnimation(
